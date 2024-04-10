@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -70,6 +72,18 @@ dependencies {
     // Paging Compose
     implementation ("androidx.paging:paging-compose:1.0.0-alpha15")
     implementation ("io.coil-kt:coil-compose:2.1.0")
+
+
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-android-compiler:2.48")
+
+//    // OPTIONAL: For instrumentation tests
+//    androidTestImplementation  ("com.google.dagger:hilt-android-testing:2.44.2")
+//    kaptAndroidTest ("com.google.dagger:hilt-compiler:2.44.2")
+//
+//    // OPTIONAL: For local unit tests
+//    testImplementation ("com.google.dagger:hilt-android-testing:2.44.2")
+//    kaptTest ("com.google.dagger:hilt-compiler:2.44.2")
 
 
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")

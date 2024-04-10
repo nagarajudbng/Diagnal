@@ -11,8 +11,6 @@ import org.junit.Test
 import com.nhaarman.mockitokotlin2.mock
 import com.training.pagingcompose.model.MovieJSON
 import com.training.pagingcompose.model.Page
-import org.hamcrest.MatcherAssert
-import org.junit.Assert.assertThat
 import org.mockito.Mockito.`when`
 import java.io.ByteArrayInputStream
 import com.google.common.truth.Truth.assertThat
