@@ -30,12 +30,12 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MovieScreen(
-                        viewModel =viewModel//MovieViewModel(MovieRepository
-                    // (LocalContext
-                    // .current))
+                        viewModel =viewModel
                     )
                 }
             }
         }
     }
+
 }
+

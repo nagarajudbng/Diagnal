@@ -1,4 +1,4 @@
-package com.codelabs.diagnalprogrammingtest.feature_movies.presentation
+package com.codelabs.diagnalprogrammingtest.feature_search.presentation
 
 import android.content.Context
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
@@ -54,6 +54,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.codelabs.diagnalprogrammingtest.R
 import com.codelabs.diagnalprogrammingtest.feature_movies.data.MovieRepository
+import com.codelabs.diagnalprogrammingtest.feature_movies.presentation.MovieViewModel
 import com.codelabs.diagnalprogrammingtest.feature_search.presentation.SearchBar
 import com.codelabs.diagnalprogrammingtest.ui.theme.titilliumFamily
 import com.codelabs.diagnalprogrammingtest.ui.util.WindowType
@@ -77,13 +78,13 @@ fun Float.pxToDp(context: Context): Float =
 
 @Preview
 @Composable
-fun MovieScreenPreview(){
+fun SearchScreenPreview(){
 
 
 
     var viewModel =  MovieViewModel(
         MovieRepository(LocalContext.current.assets))
-    MovieScreen(
+    SearchScreen(
         viewModel
     )
 }
@@ -98,7 +99,7 @@ var content = listOf<Content>(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieScreen(viewModel: MovieViewModel) {
+fun SearchScreen(viewModel: MovieViewModel) {
     Scaffold(
 //        topBar = {
 //            TopAppBar(title = {
