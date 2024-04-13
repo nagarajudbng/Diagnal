@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -66,4 +68,31 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // Paging Compose
+    implementation ("androidx.paging:paging-compose:1.0.0-alpha15")
+    implementation ("io.coil-kt:coil-compose:2.1.0")
+
+
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-android-compiler:2.48")
+
+//    // OPTIONAL: For instrumentation tests
+//    androidTestImplementation  ("com.google.dagger:hilt-android-testing:2.44.2")
+//    kaptAndroidTest ("com.google.dagger:hilt-compiler:2.44.2")
+//
+//    // OPTIONAL: For local unit tests
+//    testImplementation ("com.google.dagger:hilt-android-testing:2.44.2")
+//    kaptTest ("com.google.dagger:hilt-compiler:2.44.2")
+
+
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+
+    testImplementation ("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
+    testImplementation ("androidx.arch.core:core-testing:2.2.0")
+    androidTestImplementation("androidx.test:core:1.4.0")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.2")
+    testImplementation ("com.google.truth:truth:1.1.3")
+    testImplementation ("org.mockito:mockito-inline:3.12.4")
 }

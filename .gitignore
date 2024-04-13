@@ -75,3 +75,4 @@ app/release/output.json
 .idea/codeStyles/
 
 # I want to make library this app is just root for creating library project so ignoring to push
+DiagnalProgrammingTest/.gradle/8.2/checksums/checksums.lock

@@ -3,17 +3,24 @@ package com.codelabs.diagnalprogrammingtest
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
+import com.codelabs.diagnalprogrammingtest.feature_movies.data.MovieRepository
+import com.codelabs.diagnalprogrammingtest.feature_movies.presentation.MovieScreen
+import com.codelabs.diagnalprogrammingtest.feature_movies.presentation.MovieViewModel
 import com.codelabs.diagnalprogrammingtest.ui.theme.DiagnalProgrammingTestTheme
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+         val viewModel: MovieViewModel by viewModels()
+
         super.onCreate(savedInstanceState)
         setContent {
             DiagnalProgrammingTestTheme {
@@ -22,25 +29,13 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    MovieScreen(
+                        viewModel =viewModel
+                    )
                 }
             }
         }
     }
+
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    DiagnalProgrammingTestTheme {
-        Greeting("Android")
-    }
-}
