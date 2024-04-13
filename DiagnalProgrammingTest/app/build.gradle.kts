@@ -89,6 +89,10 @@ dependencies {
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
 
+    implementation ("androidx.room:room-ktx:2.6.1")
+    kapt ("androidx.room:room-compiler:2.6.1")
+    implementation ("androidx.room:room-paging:2.6.1")
+
     testImplementation ("com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0")
     testImplementation ("androidx.arch.core:core-testing:2.2.0")
     androidTestImplementation("androidx.test:core:1.4.0")

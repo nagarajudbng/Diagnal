@@ -4,14 +4,13 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingSource.LoadResult
 import androidx.paging.PagingSource.LoadParams
 import com.codelabs.diagnalprogrammingtest.feature_movies.data.MovieRepository
-import com.training.pagingcompose.model.Content
+import com.training.pagingcompose.model.Movie
 import com.training.pagingcompose.model.ContentItems
 import com.training.pagingcompose.model.Page
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -29,13 +28,13 @@ class MovieSourceTest {
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
-        movieSource = MovieSource(movieRepository)
+        movieSource = MovieSource(movieRepository, movieDB)
     }
 
     @Test
     fun `load data successfully`() = runBlockingTest {
         // Given
-        val expectedPage = Page(contentItems = ContentItems( arrayListOf(Content("Movie 1"), Content
+        val expectedPage = Page(contentItems = ContentItems( arrayListOf(Movie("Movie 1"), Movie
             ("Movie 2"))
         ))
         val expectedLoadParams = LoadParams.Refresh(1, 20, false)
@@ -44,7 +43,7 @@ class MovieSourceTest {
         // When
         val result = movieSource.load(expectedLoadParams)
         // Then
-        assertEquals(LoadResult.Page(expectedPage.contentItems?.content as List<Content>, null,
+        assertEquals(LoadResult.Page(expectedPage.contentItems?.content as List<Movie>, null,
             null),
             result)
     }
@@ -59,7 +58,7 @@ class MovieSourceTest {
         val result = movieSource.load(expectedLoadParams)
 
         // Then
-        assertEquals(PagingSource.LoadResult.Error<Int,Content>(expectedException), result)
+        assertEquals(PagingSource.LoadResult.Error<Int,Movie>(expectedException), result)
     }
     @After
     fun tearDown() {
