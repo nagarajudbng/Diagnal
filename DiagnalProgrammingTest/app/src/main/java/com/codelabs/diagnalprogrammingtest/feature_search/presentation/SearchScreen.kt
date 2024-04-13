@@ -96,7 +96,7 @@ var content = listOf<Content>(
     Content("Family Pot Family Pot Family Pot","poster1.jpg"),
     Content("Rear Window","poster2.jpg"),
     Content("The Birds","poster3.jpg"))
-
+//Search Screen Implementation
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(viewModel: MovieViewModel) {
