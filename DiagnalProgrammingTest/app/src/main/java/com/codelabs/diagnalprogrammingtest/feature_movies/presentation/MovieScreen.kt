@@ -3,13 +3,13 @@ package com.codelabs.diagnalprogrammingtest.feature_movies.presentation
 import android.content.Context
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.util.DisplayMetrics
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -34,7 +33,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
@@ -49,6 +47,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
+import androidx.paging.Pager
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -58,8 +57,9 @@ import com.codelabs.diagnalprogrammingtest.feature_search.presentation.SearchBar
 import com.codelabs.diagnalprogrammingtest.ui.theme.titilliumFamily
 import com.codelabs.diagnalprogrammingtest.ui.util.WindowType
 import com.codelabs.diagnalprogrammingtest.ui.util.rememberWindowSize
-import com.training.pagingcompose.model.Content
+import com.training.pagingcompose.model.Movie
 import kotlinx.coroutines.flow.Flow
+import com.codelabs.diagnalprogrammingtest.feature_movies.data.local.MovieEntity
 
 private fun Modifier.bottomElevation(): Modifier = this.then(Modifier.drawWithContent {
     val paddingPx = 8.dp.toPx()
@@ -75,26 +75,24 @@ private fun Modifier.bottomElevation(): Modifier = this.then(Modifier.drawWithCo
 fun Float.pxToDp(context: Context): Float =
     (this / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT))
 
-@Preview
-@Composable
-fun MovieScreenPreview(){
+//@Preview
+//@Composable
+//fun MovieScreenPreview(){
+//
+//
+////    val viewModel: MovieViewModel by viewModels()
+//    MovieScreen(
+//        MovieViewModel(pager = Pager<Int, MovieEntity>())
+//    )
+//}
 
-
-
-    var viewModel =  MovieViewModel(
-        MovieRepository(LocalContext.current.assets))
-    MovieScreen(
-        viewModel
-    )
-}
-
-var content = listOf<Content>(
-    Content("The Birds","poster1.jpg"),
-    Content("Rear Window","poster2.jpg"),
-    Content("Family Pot","poster3.jpg"),
-    Content("Family Pot Family Pot Family Pot","poster1.jpg"),
-    Content("Rear Window","poster2.jpg"),
-    Content("The Birds","poster3.jpg"))
+var content = listOf<Movie>(
+    Movie("The Birds","poster1.jpg"),
+    Movie("Rear Window","poster2.jpg"),
+    Movie("Family Pot","poster3.jpg"),
+    Movie("Family Pot Family Pot Family Pot","poster1.jpg"),
+    Movie("Rear Window","poster2.jpg"),
+    Movie("The Birds","poster3.jpg"))
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -153,9 +151,10 @@ fun MovieScreen(viewModel: MovieViewModel) {
 }
 
 @Composable
-fun MovieListStaggeredGrid(movies: Flow<PagingData<Content>>) {
-    val lazyMovieList:LazyPagingItems<Content> = movies.collectAsLazyPagingItems()
+fun MovieListStaggeredGrid(movies: Flow<PagingData<Movie>>) {
+    val lazyMovieList:LazyPagingItems<Movie> = movies.collectAsLazyPagingItems()
 //    val lazyMovieList = content
+//    val filteredItems = lazyMovieList.app
     val windowSizeInfo = rememberWindowSize()
     var columns = 3
     if (
@@ -267,7 +266,7 @@ fun RetrySection(errorMessage: String, onRetry: () -> Unit) {
     }
 }
 @Composable
-fun MovieList(movies: Flow<PagingData<Content>>) {
+fun MovieList(movies: Flow<PagingData<Movie>>) {
     val lazyMovieList = content//movies.collectAsLazyPagingItems()
     val windowSizeInfo = rememberWindowSize()
     var columns = 3
@@ -310,13 +309,13 @@ fun MovieList(movies: Flow<PagingData<Content>>) {
 @Preview
 @Composable
 fun MyCardPreview(){
-    MyCard(Content("Family PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily Pot","poster2.jpg"))
+    MyCard(Movie("Family PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily PotFamily Pot","poster2.jpg"))
 }
 
 
 @Composable
 fun MyCard(
-    movie: Content
+    movie: Movie
 ) {
 
     Card(
