@@ -38,13 +38,14 @@ import com.codelabs.diagnalprogrammingtest.ui.theme.titilliumFamily
 @Preview
 @Composable
 fun searchBarPreview(){
-    SearchBar(Modifier.padding(horizontal = 16.dp))
+    SearchBar(Modifier.padding(horizontal = 16.dp),onSearchTextEntered={})
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSearchTextEntered:(String)->Unit
 ) {
 
     var textState by remember { mutableStateOf("") }
@@ -68,6 +69,7 @@ fun SearchBar(
         value = textState,
         onValueChange = {
             textState = it
+            onSearchTextEntered(it)
         },
         leadingIcon = {
             if(focusState) {

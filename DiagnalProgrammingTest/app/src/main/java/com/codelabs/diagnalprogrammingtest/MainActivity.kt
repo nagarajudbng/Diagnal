@@ -9,9 +9,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.compose.rememberNavController
 import com.codelabs.diagnalprogrammingtest.feature_movies.data.MovieRepository
 import com.codelabs.diagnalprogrammingtest.feature_movies.presentation.MovieScreen
 import com.codelabs.diagnalprogrammingtest.feature_movies.presentation.MovieViewModel
+import com.codelabs.diagnalprogrammingtest.navigation.AppNavHost
 import com.codelabs.diagnalprogrammingtest.ui.theme.DiagnalProgrammingTestTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -19,7 +21,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-         val viewModel: MovieViewModel by viewModels()
 
         super.onCreate(savedInstanceState)
         setContent {
@@ -29,9 +30,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MovieScreen(
-                        viewModel =viewModel
-                    )
+//                    MovieScreen(
+//                        viewModel =viewModel
+//                    )
+                    var navController = rememberNavController()
+                    AppNavHost(navController=navController)
                 }
             }
         }

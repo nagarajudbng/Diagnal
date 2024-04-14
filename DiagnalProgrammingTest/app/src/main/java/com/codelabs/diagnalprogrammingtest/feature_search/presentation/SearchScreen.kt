@@ -3,6 +3,7 @@ package com.codelabs.diagnalprogrammingtest.feature_search.presentation
 import android.content.Context
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.util.DisplayMetrics
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
@@ -45,13 +47,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.codelabs.diagnalprogrammingtest.R
-import com.codelabs.diagnalprogrammingtest.feature_movies.data.MovieRepository
-import com.codelabs.diagnalprogrammingtest.feature_movies.presentation.MovieViewModel
+import com.codelabs.diagnalprogrammingtest.feature_search.SearchEvent
 import com.codelabs.diagnalprogrammingtest.ui.theme.titilliumFamily
 import com.codelabs.diagnalprogrammingtest.ui.util.WindowType
 import com.codelabs.diagnalprogrammingtest.ui.util.rememberWindowSize
@@ -72,18 +73,19 @@ private fun Modifier.bottomElevation(): Modifier = this.then(Modifier.drawWithCo
 fun Float.pxToDp(context: Context): Float =
     (this / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT))
 
-//@Preview
-//@Composable
-//fun SearchScreenPreview(){
-//
-//
-//
+@Preview
+@Composable
+fun SearchScreenPreview(){
+
+
+
 //    var viewModel =  MovieViewModel(
 //        MovieRepository(LocalContext.current.assets))
 //    SearchScreen(
+//        rememberNavController(),
 //        viewModel
 //    )
-//}
+}
 
 var content = listOf<Movie>(
     Movie("The Birds","poster1.jpg"),
@@ -95,7 +97,7 @@ var content = listOf<Movie>(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(viewModel: MovieViewModel) {
+fun SearchScreen(navController: NavHostController, viewModel: SearchViewModel) {
     Scaffold(
 //        topBar = {
 //            TopAppBar(title = {
@@ -110,7 +112,10 @@ fun SearchScreen(viewModel: MovieViewModel) {
                 .background(Color.Black)
         ){
 //            Spacer(Modifier.height(20f.pxToDp(LocalContext.current).dp))
-            SearchBar(Modifier.padding(horizontal = 16.dp))
+            SearchBar(Modifier.padding(horizontal = 16.dp), onSearchTextEntered = {
+                Log.d("SearchBar","Query = "+it)
+                                viewModel.onEvent(SearchEvent.OnSearchQuery(it))
+            })
 //            Spacer(Modifier.height(36f.pxToDp(LocalContext.current).dp))
 //            Box(
 //                modifier = Modifier
@@ -133,7 +138,7 @@ fun SearchScreen(viewModel: MovieViewModel) {
 //                        clip = true
 //                    )
 //            ) {
-                MovieListStaggeredGrid(movies = viewModel.movies)
+                MovieListStaggeredGrid(viewModel)
 //            }
 //                Image(
 //                    modifier = Modifier
@@ -150,9 +155,11 @@ fun SearchScreen(viewModel: MovieViewModel) {
 }
 
 @Composable
-fun MovieListStaggeredGrid(movies: Flow<PagingData<Movie>>) {
-    val lazyMovieList:LazyPagingItems<Movie> = movies.collectAsLazyPagingItems()
+fun MovieListStaggeredGrid(viewModel: SearchViewModel) {
+//    val lazyMovieList:LazyPagingItems<Movie> = movies.collect()
 //    val lazyMovieList = content
+    val movieState = viewModel.movies.collectAsState()
+    val moviesList = movieState.value
     val windowSizeInfo = rememberWindowSize()
     var columns = 3
     if (
@@ -180,56 +187,15 @@ fun MovieListStaggeredGrid(movies: Flow<PagingData<Movie>>) {
 //        verticalItemSpacing = 16.dp,
 //        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(lazyMovieList.itemCount) { index ->
-            val movie = lazyMovieList[index] ?: return@items // Handle null item
-            MyCard(movie = movie)
-        }
-        lazyMovieList.apply {
-            when {
-                loadState.refresh is LoadState.Loading -> {
-                    item {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .wrapContentWidth(Alignment.CenterHorizontally)
-                        )
-                    }
-                }
-                loadState.append is LoadState.Loading -> {
-                    item {
-                        Box(
-                            modifier = Modifier.fillMaxWidth(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    }
-                }
-                loadState.refresh is LoadState.Error -> {
-                    val errorMessage = (loadState.refresh as LoadState.Error).error.localizedMessage
-                    item {
-                        RetrySection(errorMessage = errorMessage) { retry() }
-                    }
-                }
-                loadState.append is LoadState.Error -> {
-                    val errorMessage = (loadState.append as LoadState.Error).error.localizedMessage
-                    item {
-                        RetrySection(errorMessage = errorMessage) { retry() }
-                    }
-                }
+
+
+        items(moviesList.size){ i->
+            var movie = moviesList.get(i)
+                MyCard(
+                    movie
+                )
             }
-        }
-        /*
-        items(lazyMovieList){
-            it.name?.let { it1 ->
-                it.posterImage?.let { it2 ->
-                    MyCard(
-                        title = it1,
-                        subtitle = it2
-                    )
-                }
-            }
-        } */
+
 //        items(items, var key : kotlin . Any ? = arrayOf<>(it.id)) { index ->
 //            lazyMovieList.forEachIndexed { index, card ->
 //                item(span = { GridItemSpan(1) }) {

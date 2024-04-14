@@ -23,8 +23,8 @@ object MovieModule {
 
     @Provides
     @Singleton
-    fun providesRepository(assets:AssetManager):MovieRepository{
-        return MovieRepository(assets)
+    fun providesRepository(assets:AssetManager, movieDB: MovieDatabase):MovieRepository{
+        return MovieRepository(assets, movieDB)
     }
     @Provides
     @Singleton
