@@ -3,11 +3,9 @@ package com.codelabs.diagnalprogrammingtest.feature_search.presentation
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -16,11 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -35,16 +29,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.codelabs.diagnalprogrammingtest.R
-import com.codelabs.diagnalprogrammingtest.feature_movies.presentation.pxToDp
+import com.codelabs.diagnalprogrammingtest.ui.pxToDp
 import com.codelabs.diagnalprogrammingtest.ui.theme.titilliumFamily
 
 @Preview
 @Composable
 fun searchBarPreview(){
-//    SearchBar(
-//        Modifier.padding(horizontal = 16.dp),
-//        onSearchTextEntered={}
-//         )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,9 +48,7 @@ fun SearchBar(
     searchQueryState:String,
     onFocusState:Boolean
 ) {
-//   var searchQueryState = sear
     var textState = searchQueryState
-//    var textState by remember { mutableStateOf("") }
     var focusState =  onFocusState
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
@@ -115,21 +103,6 @@ fun SearchBar(
                     )
                 }
             }
-//            else {
-//                IconButton(
-//                    onClick = {
-//                        focusState =true
-//                        focusRequester.requestFocus()
-//
-//                    }
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Default.Search,
-//                        contentDescription = null,
-//                        tint = Color.White,
-//                    )
-//                }
-//            }
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
             unfocusedBorderColor = Color.Black,

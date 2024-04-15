@@ -1,13 +1,12 @@
 package com.codelabs.diagnalprogrammingtest.feature_movies.presentation
 
-import android.content.Context
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
-import android.util.DisplayMetrics
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,72 +14,62 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.codelabs.diagnalprogrammingtest.R
 import com.codelabs.diagnalprogrammingtest.feature_movies.data.local.MovieEntity
-import com.codelabs.diagnalprogrammingtest.feature_search.presentation.SearchBar
 import com.codelabs.diagnalprogrammingtest.navigation.NavigationItem
 import com.codelabs.diagnalprogrammingtest.ui.HomeAppBar
-import com.codelabs.diagnalprogrammingtest.ui.theme.titilliumFamily
-import com.codelabs.diagnalprogrammingtest.ui.util.WindowType
-import com.codelabs.diagnalprogrammingtest.ui.util.rememberWindowSize
-import com.training.pagingcompose.model.Movie
+import com.codelabs.diagnalprogrammingtest.ui.MyCard
+import com.codelabs.diagnalprogrammingtest.ui.pxToDp
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+@Preview
+@Composable
+fun MovieScreenPreview(){
+    val movieViewModel: MovieViewModel = viewModel()
+    MovieScreen(
+        navController = rememberNavController(),
+        viewModel = movieViewModel
+    )
+}
 
-private fun Modifier.bottomElevation(): Modifier = this.then(Modifier.drawWithContent {
-    val paddingPx = 8.dp.toPx()
-    clipRect(
-        left = 0f,
-        top = 0f,
-        right = size.width,
-        bottom = size.height + paddingPx
-    ) {
-        this@drawWithContent.drawContent()
-    }
-})
-fun Float.pxToDp(context: Context): Float =
-    (this / (context.resources.displayMetrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT))
-
+var content: List<MovieEntity> = listOf<MovieEntity>(
+    MovieEntity(id=1,name="The Birds", imageUrl = "poster1.jpg"),
+    MovieEntity(id=2,name="Rear Window",imageUrl = "poster2.jpg"),
+    MovieEntity(id=2,name="Family Pot",imageUrl = "poster3.jpg"),
+    MovieEntity(id=2,name="Family Pot Family Pot Family Pot",imageUrl = "poster1.jpg"),
+    MovieEntity(id=2,name="Rear Window",imageUrl = "poster2.jpg"),
+    MovieEntity(name="The Birds",imageUrl = "poster3.jpg"))
+fun createPagingDataFlow(content: List<MovieEntity>): Flow<PagingData<MovieEntity>> {
+    return flowOf(PagingData.from(content))
+}
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieScreen(
@@ -98,13 +87,50 @@ fun MovieScreen(
     ) { paddingValues ->
         Column(
             modifier = Modifier
-                .padding(bottom = paddingValues.calculateBottomPadding())
+                .padding(
+                    bottom = paddingValues.calculateBottomPadding(),
+                    top = paddingValues.calculateTopPadding()
+                )
                 .background(Color.Black)
         ){
+            Box(
+                modifier = Modifier.fillMaxWidth()
+            ) {
                 MovieListStaggeredGrid(movies = viewModel.movies)
+                Image(
+                    painter = painterResource(id = R.drawable.nav_bar),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(20f.pxToDp(LocalContext.current).dp),
+                    contentScale = ContentScale.FillBounds,
+                    contentDescription = ""
+                )
+            }
         }
 
     }
+}
+@Preview
+@Composable
+fun ListPreview(){
+    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+
+//        MovieListStaggeredGrid(movies = viewModel.movies)
+        Row(
+        ){
+            Image(
+                painter = painterResource(id = R.drawable.nav_bar),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(20.dp),
+                contentScale = ContentScale.FillBounds,
+                contentDescription = ""
+            )
+        }
+    }
+
 }
 
 @Composable
@@ -116,7 +142,9 @@ fun MovieListStaggeredGrid(movies: Flow<PagingData<MovieEntity>>) {
     LazyVerticalStaggeredGrid(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp)
+            .padding(
+                start = 30f.pxToDp(LocalContext.current).dp,
+                end = 30f.pxToDp(LocalContext.current).dp)
             .background(Color.Black),
 
         columns = cellConfiguration,
@@ -125,9 +153,9 @@ fun MovieListStaggeredGrid(movies: Flow<PagingData<MovieEntity>>) {
     ) {
         items(lazyMovieList.itemCount) { index ->
             val movie = lazyMovieList[index] ?: return@items // Handle null item
-            key(movie.id) {
+//            key(movie.id) {
                 MyCard(movie = movie)
-            }
+//            }
         }
         lazyMovieList.apply {
             when {
@@ -184,94 +212,4 @@ fun RetrySection(errorMessage: String, onRetry: () -> Unit) {
     }
 }
 
-@Composable
-fun MyCard(
-    movie: MovieEntity
-) {
-
-    Card(
-        modifier = Modifier
-            .background(Color.Black)
-            .fillMaxWidth(),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Black, //Card background color
-            contentColor = Color.White  //Card content color,e.g.text
-        ),
-        shape = RoundedCornerShape(0.dp)
-
-    ) {
-        var  resId = LocalContext.current.resources.getIdentifier(
-            movie.imageUrl?.split(".")?.get(0) ?: "","drawable", LocalContext.current.packageName)
-        Image(
-            modifier = Modifier
-                .fillMaxWidth(),
-            painter =  if(resId == 0){
-                            painterResource(id = R.drawable.no_image_found)
-                        } else {
-                            painterResource(id = resId)
-                        },
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth
-        )
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(
-                    top = 24f.pxToDp(LocalContext.current).dp,
-                    bottom = 0.dp
-                )
-                .background(Color.Black)
-        ) {
-
-            movie.name?.let { name->
-                Text(
-                    text = if(name.length>12){
-                            name.subSequence(0,11).toString()+" ..."
-                        } else {
-                        name
-                        }
-                        ,
-                    color = Color.White,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontFamily = titilliumFamily,
-                    fontWeight = FontWeight.Light,
-                    fontSize = with(LocalDensity.current) { ptToSp(36f).sp }
-                )
-            }
-
-        }
-    }
-}
-@Composable
-fun ptToSp(pt:Float):Float{
-    val scaledDensity: Float = LocalContext.current.resources.displayMetrics.density
-    return pt / scaledDensity
-}
-
-@Preview
-@Composable
-fun previewShadow(){
-    Shadow()
-}
-@Composable
-fun Shadow(){
-    Box(
-        modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp)
-            .shadow(
-                elevation = 25.dp,
-                shape = RoundedCornerShape(25.dp),
-                clip = true
-            )
-    ) {
-        Image(
-                    modifier = Modifier
-                        .width(200.dp)
-                        .height(100.dp),
-                    painter = painterResource(id = R.drawable.poster1),
-                    contentDescription = null,
-                )
-    }
-}
 
