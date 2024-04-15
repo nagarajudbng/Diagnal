@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -25,7 +24,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -48,11 +46,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.paging.LoadState
 import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
 import com.codelabs.diagnalprogrammingtest.R
 import com.codelabs.diagnalprogrammingtest.feature_search.SearchEvent
+import com.codelabs.diagnalprogrammingtest.navigation.NavigationItem
 import com.codelabs.diagnalprogrammingtest.ui.theme.titilliumFamily
 import com.codelabs.diagnalprogrammingtest.ui.util.WindowType
 import com.codelabs.diagnalprogrammingtest.ui.util.rememberWindowSize
@@ -105,17 +102,37 @@ fun SearchScreen(navController: NavHostController, viewModel: SearchViewModel) {
 //            })
 //        }
     ) { paddingValues ->
-
+        viewModel.onEvent((SearchEvent.OnFocusChange(true)))
         Column(
             modifier = Modifier
                 .padding(bottom = paddingValues.calculateBottomPadding())
                 .background(Color.Black)
         ){
 //            Spacer(Modifier.height(20f.pxToDp(LocalContext.current).dp))
-            SearchBar(Modifier.padding(horizontal = 16.dp), onSearchTextEntered = {
-                Log.d("SearchBar","Query = "+it)
-                                viewModel.onEvent(SearchEvent.OnSearchQuery(it))
-            })
+            SearchBar(
+                Modifier.padding(horizontal = 16.dp),
+                onSearchTextEntered = {
+                    Log.d("SearchBar","Query = "+it)
+                    viewModel.onEvent(SearchEvent.OnSearchQuery(it))
+                },
+                onFocusChange = {
+                    viewModel.onEvent((SearchEvent.OnFocusChange(it)))
+                },
+                onBackPressed = {
+                    viewModel.onEvent(SearchEvent.OnSearchQuery(""))
+                    viewModel.onEvent(SearchEvent.OnClearPressed)
+                     navController.navigate(NavigationItem.HOME.route){
+                         popUpTo(NavigationItem.SEARCH.route) {
+                             inclusive = true
+                         }
+                     }
+                },
+                onClearPressed = {
+                    viewModel.onEvent(SearchEvent.OnClearPressed)
+                },
+                viewModel.searchQuery.value,
+                viewModel.focusState.value
+            )
 //            Spacer(Modifier.height(36f.pxToDp(LocalContext.current).dp))
 //            Box(
 //                modifier = Modifier
@@ -158,8 +175,10 @@ fun SearchScreen(navController: NavHostController, viewModel: SearchViewModel) {
 fun MovieListStaggeredGrid(viewModel: SearchViewModel) {
 //    val lazyMovieList:LazyPagingItems<Movie> = movies.collect()
 //    val lazyMovieList = content
+
     val movieState = viewModel.movies.collectAsState()
     val moviesList = movieState.value
+    Log.d("Search","MovieListStaggeredGrid = "+moviesList.size)
     val windowSizeInfo = rememberWindowSize()
     var columns = 3
     if (

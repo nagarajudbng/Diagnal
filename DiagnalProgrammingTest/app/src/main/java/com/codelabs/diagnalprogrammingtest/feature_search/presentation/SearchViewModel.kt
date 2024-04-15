@@ -1,5 +1,7 @@
 package com.codelabs.diagnalprogrammingtest.feature_search.presentation
 
+import android.util.Log
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -41,26 +43,44 @@ class SearchViewModel @Inject constructor(
 //            pagingData.map { it.toMovie() }
 //        }
 //        .cachedIn(viewModelScope)
-        private val _movies = MutableStateFlow<List<Movie>>(
-    listOf())
+        private val _searchQuery = mutableStateOf("")
+        val searchQuery = _searchQuery
+        private val _focusState = mutableStateOf(true)
+        val focusState = _focusState
+
+        private val _movies = MutableStateFlow<List<Movie>>(listOf())
         val movies = _movies.asStateFlow()
 
 
         fun onEvent(event:SearchEvent){
+
             when(event){
                 is SearchEvent.OnSearchQuery->{
-                    viewModelScope.launch {
+                    searchQuery.value = event.query
+                    if(event.query.length>=3) {
+                        viewModelScope.launch {
 //                        var movieList:List<Movie> = repository.searchQuery(event.query)
 //                        _movies.value = movieList
 
 //                        repository.searchQuery(event.query).collect { movies ->
 //                            _movieList.value = movies
 //                        }
-                        repository.searchQuery(event.query).flowOn(Dispatchers.IO).collect {
-                            books: List<MovieEntity> ->
-                            _movies.value = books.map { it.toMovie() }
+                            repository.searchQuery(event.query).flowOn(Dispatchers.IO)
+                                .collect { books: List<MovieEntity> ->
+                                    _movies.value = books.map { it.toMovie() }
+                                }
                         }
                     }
+                }
+                is SearchEvent.OnFocusChange ->{
+                    focusState.value = event.focus
+                }
+
+                is SearchEvent.OnClearPressed ->{
+                    _searchQuery.value=""
+                    Log.d("Search","OnClearPressed = "+_movies.value.size)
+                    _movies.value = emptyList()
+                    Log.d("Search","OnClearPressed 2 = "+_movies.value.size)
                 }
 
             }

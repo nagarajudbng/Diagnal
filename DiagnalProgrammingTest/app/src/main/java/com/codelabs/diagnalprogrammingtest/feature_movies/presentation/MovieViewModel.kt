@@ -21,14 +21,7 @@ class MovieViewModel @Inject constructor(
     pager:Pager<Int,MovieEntity>
 ) : ViewModel() {
 
-//    val movies: Flow<PagingData<Movie>> = Pager(PagingConfig(pageSize = 20)){
-//        MovieSource(movieRepository = repository, movieDB = movieDB)
-//    }.flow
-
     val movies = pager
         .flow
-        .map { pagingData->
-            pagingData.map { it.toMovie() }
-        }
         .cachedIn(viewModelScope)
 }

@@ -35,13 +35,8 @@ class MovieRepository @Inject constructor(
     }
 
     override suspend fun searchQuery(query: String): Flow<List<MovieEntity>> {
-//        movieDB.movieDao.searchMoviesByName(query)
         Log.d("SearchBar","Query repository= "+query)
         val flow = movieDB.movieDao.searchMoviesByName(query)
-//        val movieList = mutableListOf<Movie>()
-//        flow.collect { movies ->
-//            movieList.addAll(movies.map { it.toMovie() })
-//        }
         return flow
     }
 }

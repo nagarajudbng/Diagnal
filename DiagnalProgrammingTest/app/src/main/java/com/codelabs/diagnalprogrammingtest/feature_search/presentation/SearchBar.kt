@@ -1,5 +1,6 @@
 package com.codelabs.diagnalprogrammingtest.feature_search.presentation
 
+import android.util.Log
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -14,6 +15,8 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,44 +41,54 @@ import com.codelabs.diagnalprogrammingtest.ui.theme.titilliumFamily
 @Preview
 @Composable
 fun searchBarPreview(){
-    SearchBar(Modifier.padding(horizontal = 16.dp),onSearchTextEntered={})
+//    SearchBar(
+//        Modifier.padding(horizontal = 16.dp),
+//        onSearchTextEntered={}
+//         )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
-    onSearchTextEntered:(String)->Unit
+    onSearchTextEntered: (String) -> Unit,
+    onFocusChange: (Boolean) -> Unit,
+    onBackPressed: ()-> Unit,
+    onClearPressed:()->Unit,
+    searchQueryState:String,
+    onFocusState:Boolean
 ) {
-
-    var textState by remember { mutableStateOf("") }
-    var focusState by remember { mutableStateOf(false) }
+//   var searchQueryState = sear
+    var textState = searchQueryState
+//    var textState by remember { mutableStateOf("") }
+    var focusState =  onFocusState
     val focusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
 
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(156f.pxToDp(LocalContext.current.applicationContext).dp)
             .onFocusChanged {
-                if (it.isFocused) {
-                    focusState = it.isFocused
-                } else {
-                    focusState = it.isFocused
-                }
+                Log.d("SearchBar",  "value = "+focusState)
+                onFocusChange(it.isFocused)
             }
             .focusRequester(focusRequester),
 
         value = textState,
         onValueChange = {
-            textState = it
             onSearchTextEntered(it)
+
         },
         leadingIcon = {
             if(focusState) {
                 IconButton(
                     onClick = {
                         focusManager.clearFocus()
+                        onBackPressed()
                     }
                 ) {
                     Icon(
@@ -90,7 +103,8 @@ fun SearchBar(
             if(textState.isNotEmpty()){
                 IconButton(
                     onClick = {
-                        textState = ""
+                        onSearchTextEntered("")
+                        onClearPressed()
                     }
                 ) {
 
@@ -100,21 +114,22 @@ fun SearchBar(
                         tint = Color.White,
                     )
                 }
-            } else {
-                IconButton(
-                    onClick = {
-                        focusState =true
-                        focusRequester.requestFocus()
-
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Search,
-                        contentDescription = null,
-                        tint = Color.White,
-                    )
-                }
             }
+//            else {
+//                IconButton(
+//                    onClick = {
+//                        focusState =true
+//                        focusRequester.requestFocus()
+//
+//                    }
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Default.Search,
+//                        contentDescription = null,
+//                        tint = Color.White,
+//                    )
+//                }
+//            }
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
             unfocusedBorderColor = Color.Black,
