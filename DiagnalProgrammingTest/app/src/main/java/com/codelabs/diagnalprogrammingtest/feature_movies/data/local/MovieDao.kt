@@ -4,7 +4,9 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
+import androidx.room.util.query
 import com.training.pagingcompose.model.Movie
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieDao {
@@ -14,6 +16,9 @@ interface MovieDao {
     
     @Query("SELECT * FROM movieentity")
     fun pagingSource(): PagingSource<Int,MovieEntity>
+
+    @Query("SELECT * FROM movieentity WHERE name LIKE '%' || :searchQuery || '%'")
+    fun searchMoviesByName(searchQuery:String): Flow<List<MovieEntity>>
 
     @Query("DELETE FROM movieentity")
     suspend fun clearALL()

@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -73,21 +74,15 @@ dependencies {
     implementation ("androidx.paging:paging-compose:1.0.0-alpha15")
     implementation ("io.coil-kt:coil-compose:2.1.0")
 
+    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
+    implementation("com.google.firebase:firebase-analytics")
 
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
 
-//    // OPTIONAL: For instrumentation tests
-//    androidTestImplementation  ("com.google.dagger:hilt-android-testing:2.44.2")
-//    kaptAndroidTest ("com.google.dagger:hilt-compiler:2.44.2")
-//
-//    // OPTIONAL: For local unit tests
-//    testImplementation ("com.google.dagger:hilt-android-testing:2.44.2")
-//    kaptTest ("com.google.dagger:hilt-compiler:2.44.2")
-
-
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("androidx.navigation:navigation-compose:2.7.7")
 
     implementation ("androidx.room:room-ktx:2.6.1")
     kapt ("androidx.room:room-compiler:2.6.1")

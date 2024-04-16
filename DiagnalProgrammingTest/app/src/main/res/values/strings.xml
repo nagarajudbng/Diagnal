@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">DiagnalProgrammingTest</string>
     <string name="placeholder_search">Search</string>
+    <string name="app_bar_title">Romantic Comedy</string>
 </resources>
