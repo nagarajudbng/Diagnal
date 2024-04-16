@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -44,7 +43,11 @@ import com.codelabs.diagnalprogrammingtest.feature_movies.data.local.MovieEntity
 import com.codelabs.diagnalprogrammingtest.navigation.NavigationItem
 import com.codelabs.diagnalprogrammingtest.ui.HomeAppBar
 import com.codelabs.diagnalprogrammingtest.ui.MyCard
+import com.codelabs.diagnalprogrammingtest.ui.cellHorizontalSpace
+import com.codelabs.diagnalprogrammingtest.ui.cellVerticalSpace
+import com.codelabs.diagnalprogrammingtest.ui.gridViewEndPadding
 import com.codelabs.diagnalprogrammingtest.ui.pxToDp
+import com.codelabs.diagnalprogrammingtest.ui.gridViewStartPadding
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 @Preview
@@ -107,29 +110,6 @@ fun MovieScreen(
 
     }
 }
-@Preview
-@Composable
-fun ListPreview(){
-    Box(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-
-//        MovieListStaggeredGrid(movies = viewModel.movies)
-        Row(
-        ){
-            Image(
-                painter = painterResource(id = R.drawable.nav_bar),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(20.dp),
-                contentScale = ContentScale.FillBounds,
-                contentDescription = ""
-            )
-        }
-    }
-
-}
-
 @Composable
 fun MovieListStaggeredGrid(movies: Flow<PagingData<MovieEntity>>) {
     val lazyMovieList:LazyPagingItems<MovieEntity> = movies.collectAsLazyPagingItems()
@@ -142,19 +122,17 @@ fun MovieListStaggeredGrid(movies: Flow<PagingData<MovieEntity>>) {
         modifier = Modifier
             .fillMaxSize()
             .padding(
-                start = 30f.pxToDp(LocalContext.current).dp,
-                end = 30f.pxToDp(LocalContext.current).dp)
+                start = gridViewStartPadding.pxToDp(LocalContext.current).dp,
+                end = gridViewEndPadding.pxToDp(LocalContext.current).dp)
             .background(Color.Black),
         state  = state,
         columns = cellConfiguration,
-        verticalItemSpacing = 90f.pxToDp(LocalContext.current).dp,
-        horizontalArrangement = Arrangement.spacedBy(30f.pxToDp(LocalContext.current).dp)
+        verticalItemSpacing = cellVerticalSpace.pxToDp(LocalContext.current).dp,
+        horizontalArrangement = Arrangement.spacedBy(cellHorizontalSpace.pxToDp(LocalContext.current).dp)
     ) {
         items(lazyMovieList.itemCount) { index ->
             val movie = lazyMovieList[index] ?: return@items // Handle null item
-//            key(movie.id) {
-                MyCard(movie = movie, query = "")
-//            }
+            MyCard(movie = movie, query = "")
         }
         lazyMovieList.apply {
             when {

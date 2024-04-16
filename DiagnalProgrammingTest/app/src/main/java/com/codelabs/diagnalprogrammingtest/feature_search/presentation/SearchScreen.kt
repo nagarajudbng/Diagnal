@@ -1,7 +1,6 @@
 package com.codelabs.diagnalprogrammingtest.feature_search.presentation
 
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,9 +25,11 @@ import androidx.navigation.NavHostController
 import com.codelabs.diagnalprogrammingtest.feature_search.SearchEvent
 import com.codelabs.diagnalprogrammingtest.navigation.NavigationItem
 import com.codelabs.diagnalprogrammingtest.ui.MyCard
+import com.codelabs.diagnalprogrammingtest.ui.cellHorizontalSpace
+import com.codelabs.diagnalprogrammingtest.ui.cellVerticalSpace
+import com.codelabs.diagnalprogrammingtest.ui.gridViewEndPadding
 import com.codelabs.diagnalprogrammingtest.ui.pxToDp
-import com.codelabs.diagnalprogrammingtest.ui.util.WindowType
-import com.codelabs.diagnalprogrammingtest.ui.util.rememberWindowSize
+import com.codelabs.diagnalprogrammingtest.ui.gridViewStartPadding
 
 private fun Modifier.bottomElevation(): Modifier = this.then(Modifier.drawWithContent {
     val paddingPx = 8.dp.toPx()
@@ -88,29 +89,19 @@ fun MovieListStaggeredGrid(viewModel: SearchViewModel) {
     val movieState = viewModel.movies.collectAsState()
     val moviesList = movieState.value
     val query = viewModel.searchQuery.value
-    Log.d("Search","MovieListStaggeredGrid = "+moviesList.size)
-    val windowSizeInfo = rememberWindowSize()
-    var columns = 3
-    if (
-        windowSizeInfo.widthInfo is WindowType.Compact
-        || windowSizeInfo.widthInfo is WindowType.Medium
-    ) {
-        columns = 3
-    } else {
-        columns = 7
-    }
+
     val cellConfiguration = if (LocalConfiguration.current.orientation == ORIENTATION_LANDSCAPE) {
         StaggeredGridCells.Fixed(7)
     } else StaggeredGridCells.Fixed(3)
     LazyVerticalStaggeredGrid(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 16.dp, end = 16.dp)
+            .padding(start = gridViewStartPadding.dp, end = gridViewEndPadding.dp)
             .background(Color.Black),
 
         columns = cellConfiguration,
-        verticalItemSpacing = 90f.pxToDp(LocalContext.current).dp,
-        horizontalArrangement = Arrangement.spacedBy(30f.pxToDp(LocalContext.current).dp)
+        verticalItemSpacing = cellVerticalSpace.pxToDp(LocalContext.current).dp,
+        horizontalArrangement = Arrangement.spacedBy(cellHorizontalSpace.pxToDp(LocalContext.current).dp)
     ) {
 
 

@@ -54,7 +54,7 @@ fun HomeAppBar(
                     style = MaterialTheme.typography.bodyMedium,
                     fontFamily = titilliumFamily,
                     fontWeight = FontWeight.Light,
-                    fontSize = with(LocalDensity.current) { ptToSp(45f).sp }
+                    fontSize = with(LocalDensity.current) { ptToSp(titleTextSize).sp }
                 )
             },
 
