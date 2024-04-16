@@ -1,0 +1,42 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2513
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;\f2\fswiss\fcharset0 Helvetica-Oblique;
+}
+{\colortbl;\red255\green255\blue255;\red24\green25\blue27;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c12549\c12941\c14118;\cssrgb\c100000\c100000\c100000;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww25100\viewh13540\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\b\fs36 \cf0 \ul \ulc0 Key-Notes
+\f1\b0 \ulnone \
+- UI Designed using JetPack Compose library it is Modern UI kit for android\
+- We have two screens here \
+	-MovieScreen (Home Screen)\
+	-SearchScreen \
+	
+\f2\i\fs28 Note: I implemented two screens here because, I want to make all module as separate as part of google android instruction they provided one good feature called Play Feature Delivery it will \cf2 \cb3 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Google Play\'92s app serving model uses android app bundles to generate and serve optimized APKs for each user\'92s device configuration, so users download only the code and resources they need to run your app.
+\f1\i0\fs36 \cf0 \cb1 \kerning1\expnd0\expndtw0 \outl0\strokewidth0 \
+- Movies screen fixed edge cases\
+	 -when we don\'92t have image resource showing no image found\
+	- if we have long text then those text will show into small with dotted lines( ex: The Bird w\'85)\
+	- in JSON files 3rd one showing total movies list 24 and that file contain 17 movies item ( but 1 and 2 json files showing 54 total and those pages having 20 items list properly ) but 3rd file this will causes issue while fetching and storing into database so I fixed it while fetching.\
+\
+- Search screen UI \
+	- while searching for any movie based on that query movie names will hightlight with yellow color \
+	- while searching any thing first query interacting with local room database if not found it in local it will redirects to web api for searching content\
+	- but to search for web api is not implemented because we don\'92t have source right I stoped here search in local only.\
+- We are not depending on resource file to maintain ui sizes, because as per spec documents you provided showing in PX format but android  not supports PX format so I am converting those PX values into dimensions by using coding in app base on device screen resolution that will changes.\
+- Movies list showing using JetPack Paging Library\
+- While downloading data from server or local file we are caching data in local memory using Room Database\
+- This caching mechanism useful while user in offline mode he can able to interact with the content like he can add to watch later and save the movie information etc.\
+- To implement this caching mechanism implemented RemoteMediator API class this is responsible to fetches data from Web apis and stores the data into Room database and gives those data to show on the screen\
+- this Technique is called as Single source of data while showing to user, so above implementation is used single source of data that is Room Database\
+- Implemented Dependency injection using Dagger hilt\
+- writer Test cases for MovieRepository by using TDD\
+- Implemented Firebase App distribution api, now we can distribute app multiple user like QA team and any one\
+- Used Github for source control ( by using Github I developed app in 3 faces like split into multiple branches like, MoviesScreen and SearchScreen etc. then merged into master branch)\
+\
+GitHub link : https://github.com/nagarajudbng/Diagnal\
+\
+\
+}
