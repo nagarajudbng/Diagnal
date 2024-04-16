@@ -19,6 +19,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -28,7 +31,8 @@ import com.codelabs.diagnalprogrammingtest.ui.theme.titilliumFamily
 
 @Composable
 fun MyCard(
-    movie: MovieEntity
+    movie: MovieEntity,
+    query: String
 ) {
 
     Card(
@@ -67,11 +71,22 @@ fun MyCard(
         ) {
 
             movie.name?.let { name->
-                Text(
-                    text = if(name.length>12){
+                    var movieName =  if(name.length>12){
                         name.subSequence(0,11).toString()+" ..."
                     } else {
                         name
+                    }
+                    Text(
+                    text = buildAnnotatedString {
+                        append(movieName)
+                        addStyle(
+                            style = SpanStyle(
+                                color = Color.Yellow,
+                                fontWeight = FontWeight.Bold
+                            ),
+                            start = 0,
+                            end = if (query.isNotEmpty() && name.length>query.length) query.length else 0
+                        )
                     }
                     ,
                     color = Color.White,

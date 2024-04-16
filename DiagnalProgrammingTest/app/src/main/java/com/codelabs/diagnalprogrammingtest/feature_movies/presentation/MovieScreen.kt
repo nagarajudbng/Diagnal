@@ -12,21 +12,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -136,6 +133,8 @@ fun ListPreview(){
 @Composable
 fun MovieListStaggeredGrid(movies: Flow<PagingData<MovieEntity>>) {
     val lazyMovieList:LazyPagingItems<MovieEntity> = movies.collectAsLazyPagingItems()
+    val state = rememberLazyStaggeredGridState()
+
     val cellConfiguration = if (LocalConfiguration.current.orientation == ORIENTATION_LANDSCAPE) {
         StaggeredGridCells.Fixed(7)
     } else StaggeredGridCells.Fixed(3)
@@ -146,7 +145,7 @@ fun MovieListStaggeredGrid(movies: Flow<PagingData<MovieEntity>>) {
                 start = 30f.pxToDp(LocalContext.current).dp,
                 end = 30f.pxToDp(LocalContext.current).dp)
             .background(Color.Black),
-
+        state  = state,
         columns = cellConfiguration,
         verticalItemSpacing = 90f.pxToDp(LocalContext.current).dp,
         horizontalArrangement = Arrangement.spacedBy(30f.pxToDp(LocalContext.current).dp)
@@ -154,7 +153,7 @@ fun MovieListStaggeredGrid(movies: Flow<PagingData<MovieEntity>>) {
         items(lazyMovieList.itemCount) { index ->
             val movie = lazyMovieList[index] ?: return@items // Handle null item
 //            key(movie.id) {
-                MyCard(movie = movie)
+                MyCard(movie = movie, query = "")
 //            }
         }
         lazyMovieList.apply {

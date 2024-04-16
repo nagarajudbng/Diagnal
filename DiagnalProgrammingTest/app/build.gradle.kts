@@ -80,15 +80,6 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.48")
     kapt("com.google.dagger:hilt-android-compiler:2.48")
 
-//    // OPTIONAL: For instrumentation tests
-//    androidTestImplementation  ("com.google.dagger:hilt-android-testing:2.44.2")
-//    kaptAndroidTest ("com.google.dagger:hilt-compiler:2.44.2")
-//
-//    // OPTIONAL: For local unit tests
-//    testImplementation ("com.google.dagger:hilt-android-testing:2.44.2")
-//    kaptTest ("com.google.dagger:hilt-compiler:2.44.2")
-
-
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("androidx.navigation:navigation-compose:2.7.7")

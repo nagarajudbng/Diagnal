@@ -20,9 +20,6 @@ interface MovieDao {
     @Query("SELECT * FROM movieentity WHERE name LIKE '%' || :searchQuery || '%'")
     fun searchMoviesByName(searchQuery:String): Flow<List<MovieEntity>>
 
-//    @Query("SELECT * FROM movieentity ")
-//     fun searchMoviesByName(): Flow<List<MovieEntity>>
-
     @Query("DELETE FROM movieentity")
     suspend fun clearALL()
 }

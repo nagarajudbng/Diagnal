@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    val repository : MovieRepository
+    private val repository : MovieRepository
 ) : ViewModel() {
         private val _searchQuery = mutableStateOf("")
         val searchQuery = _searchQuery
@@ -37,6 +37,8 @@ class SearchViewModel @Inject constructor(
                                     _movies.value = books
                                 }
                         }
+                    } else {
+                        _movies.value = emptyList()
                     }
                 }
                 is SearchEvent.OnFocusChange ->{

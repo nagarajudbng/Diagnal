@@ -1,6 +1,5 @@
 package com.codelabs.diagnalprogrammingtest.feature_movies.data.paged
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -9,7 +8,6 @@ import androidx.room.withTransaction
 import com.codelabs.diagnalprogrammingtest.feature_movies.data.MovieRepository
 import com.codelabs.diagnalprogrammingtest.feature_movies.data.local.MovieDatabase
 import com.codelabs.diagnalprogrammingtest.feature_movies.data.local.MovieEntity
-import com.codelabs.diagnalprogrammingtest.feature_movies.data.mapper.toJsonEntity
 import com.codelabs.diagnalprogrammingtest.feature_movies.data.mapper.toMovieEntity
 import com.training.pagingcompose.model.Movie
 import retrofit2.HttpException
@@ -30,12 +28,9 @@ class MovieMediator(
         state: PagingState<Int, MovieEntity>
     ): MediatorResult {
         return try{
-            var insert = false
             var loadKey = -1
             when(loadType){
                 LoadType.REFRESH -> {
-//                    loadKey = 1
-                    Log.d("MovieMediator "," LoadType.REFRESH ")
                 }
 
                 LoadType.PREPEND -> {
@@ -62,18 +57,13 @@ class MovieMediator(
                 movieDB.withTransaction {
                     if (loadType == LoadType.REFRESH) {
                         movieDB.movieDao.clearALL()
-                        movieDB.pageDao.clearALL()
                     }
                     if( movieJson.page?.contentItems?.content!=null)
                         movieJson1 = movieJson.page?.contentItems?.content!!
-                    val pageEntities = movieJson.page?.let { it.toJsonEntity() }
                     val movieEntities =
                         movieJson.page?.contentItems?.content?.map { it.toMovieEntity() }
                     if (movieEntities != null) {
                         movieDB.movieDao.upsertAll(movieEntities)
-                    }
-                    if (pageEntities != null) {
-                        movieDB.pageDao.upsertAll(pageEntities)
                     }
                 }
             }

@@ -2,39 +2,27 @@ package com.codelabs.diagnalprogrammingtest.feature_search.presentation
 
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.codelabs.diagnalprogrammingtest.R
 import com.codelabs.diagnalprogrammingtest.feature_search.SearchEvent
 import com.codelabs.diagnalprogrammingtest.navigation.NavigationItem
 import com.codelabs.diagnalprogrammingtest.ui.MyCard
@@ -68,7 +56,6 @@ fun SearchScreen(navController: NavHostController, viewModel: SearchViewModel) {
             SearchBar(
                 Modifier.padding(horizontal = 16.dp),
                 onSearchTextEntered = {
-                    Log.d("SearchBar","Query = "+it)
                     viewModel.onEvent(SearchEvent.OnSearchQuery(it))
                 },
                 onFocusChange = {
@@ -89,6 +76,7 @@ fun SearchScreen(navController: NavHostController, viewModel: SearchViewModel) {
                 viewModel.searchQuery.value,
                 viewModel.focusState.value
             )
+                Spacer(Modifier.height(10.dp))
                 MovieListStaggeredGrid(viewModel)
         }
 
@@ -97,11 +85,9 @@ fun SearchScreen(navController: NavHostController, viewModel: SearchViewModel) {
 
 @Composable
 fun MovieListStaggeredGrid(viewModel: SearchViewModel) {
-//    val lazyMovieList:LazyPagingItems<Movie> = movies.collect()
-//    val lazyMovieList = content
-
     val movieState = viewModel.movies.collectAsState()
     val moviesList = movieState.value
+    val query = viewModel.searchQuery.value
     Log.d("Search","MovieListStaggeredGrid = "+moviesList.size)
     val windowSizeInfo = rememberWindowSize()
     var columns = 3
@@ -130,10 +116,8 @@ fun MovieListStaggeredGrid(viewModel: SearchViewModel) {
 
         items(moviesList.size){ i->
             var movie = moviesList.get(i)
-                MyCard(
-                    movie
-                )
-            }
+            MyCard(movie, query)
+        }
     }
 }
 
