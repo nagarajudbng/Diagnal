@@ -1,0 +1,32 @@
+{
+  "project_info": {
+    "project_number": "677887854881",
+    "project_id": "diagnal-10c2f",
+    "storage_bucket": "diagnal-10c2f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677887854881:android:7e97ca5c423b5e39da1660",
+        "android_client_info": {
+          "package_name": "com.codelabs.diagnalprogrammingtest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBoETspsOfQwDr0mGo0HYtskdH3IDCYVjM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+
+
+
+}
